@@ -15,8 +15,14 @@ const createProduct = (data) => {
 const deleteProduct = (ProductID) => {
     return axios.delete('/delete-product', { data: { id: ProductID } });
 }
+const FindByIdProduct = (ProductID) => {
+    return axios.delete('/product/:id', { data: { id: ProductID } });
+}
 const updateProduct = (data) => {
     return axios.put('/update-product', data);
 }
+const GetProductByType = (datatype) => {
+    return axios.get('/getproductbytype?type=');
+}
 
-export { handleLoginApi, getAllBooks, createProduct, deleteProduct, updateProduct }
+export { handleLoginApi, getAllBooks, createProduct, deleteProduct, updateProduct, FindByIdProduct }

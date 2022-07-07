@@ -6,22 +6,16 @@
 body{
     font-family: Helvetica;
     -webkit-font-smoothing: antialiased;
-    background: rgba( 71, 147, 227, 1);
+    background: rgb(206, 209, 212);
     overflow-y:scroll;
 }
-h2{
-    text-align: center;
-    font-size: 18px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: white;
-    padding: 10px 0;
-}
+
 
 /* Table Styles */
 
 .table-wrapper{
-    margin: 10px 10px 70px;
+    // margin: 0px 10px 70px;
+    padding-right: 0px;
     box-shadow: 0px 35px 50px rgba( 0, 0, 0, 0.2 );
 }
 
@@ -30,6 +24,7 @@ h2{
     font-size: 12px;
     font-weight: normal;
     border: none;
+    
     border-collapse: collapse;
     width: 100%;
     max-width: 100%;
@@ -57,7 +52,11 @@ h2{
     color: #ffffff;
     background: #324960;
 }
-
+.fl-table tr{
+    &:hover{
+        background-color: #dee7f0 !important;
+    }
+}
 .fl-table tr:nth-child(even) {
     background: #F8F8F8;
 }
@@ -66,18 +65,44 @@ h2{
     margin: 10px;
     height: 30px;
     width: 40px;
+    border-radius: 10px;
+
 }
 .button-style-delete{
     background-color: #e01947;
     margin: 10px;
     height: 30px;
     width: 40px;
+    border-radius: 10px;
+
 }
 .button-add{
-    background-color: #edf73a;
+    background-color: #000000;
     margin-left: 30px;
+    margin-top: 20px;
+    float: right;
+    margin-right: 65px;
     padding: 5px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    color: white;
+
 }
+.header-listproduct{
+
+    
+}
+h2{
+    text-align: center;
+    font-size: 18px;
+    float: left;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: rgb(0, 0, 0);
+    padding-top: 25px;
+    padding-left: 10px;
+}
+
 /* Responsive */
 
 @media (max-width: 767px) {
