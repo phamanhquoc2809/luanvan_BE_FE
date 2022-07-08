@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 // import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, FormGroup, Input } from 'reactstrap';
-import { getAllCate } from '../../services/productService';
-import { getAllBooks, createProduct, deleteProduct, updateProduct } from '../../services/userService';
+import { getAllCate } from '../../services/cateService';
+import { getAllBooks, createProduct, deleteProduct, updateProduct } from '../../services/productService';
 import Lightbox from 'react-image-lightbox';
 import 'react-image-lightbox/style.css';
 import './ModelEditProduct.scss'

@@ -27,6 +27,7 @@ class System extends Component {
                         <Switch>
                             <Route path="/system/user-manage" component={UserManage} />
                             <Route path="/system/product-manage" component={ProductManage} />
+                            <Route path="/system/cate-manage" component={CateManage} />
                             <Route path="/system/banner-manage" component={BannerManage} />
                             <Route path="/system/comment-manage" component={CommentManage} />
                             <Route path="/system/coupon-manage" component={CouponManage} />

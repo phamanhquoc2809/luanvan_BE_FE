@@ -2,8 +2,8 @@ import React, { useEffect, Component } from 'react';
 // import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, FormGroup, Input } from 'reactstrap';
-import { getAllCate } from '../../services/productService';
-import { getAllBooks, createProduct, deleteProduct, updateProduct } from '../../services/userService';
+import { getAllCate } from '../../services/cateService';
+import { getAllBooks, createProduct, deleteProduct, updateProduct } from '../../services/productService';
 import { db, storage } from '../../firebaseConnect';
 import { doc, setDoc } from "firebase/firestore";
 import { ref, uploadBytesResumable, getDownloadURL, listAll, list, uploadBytes } from "firebase/storage";
@@ -439,10 +439,6 @@ class ModelProduct extends Component {
                                     </div>
                                     <div>
                                         <label for="card-num">Category</label>
-                                        {/* <input type="text" name="zip"
-
-                                            onChange={(event) => { this.onChageInput(event, 'id_cate') }}
-                                        /> */}
                                         <select className='form-control'
                                             value={id_cate}
                                             onChange={(event) => { this.onChageInput(event, 'id_cate') }}

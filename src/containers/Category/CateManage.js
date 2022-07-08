@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
-// import './CateManage.scss';
-import { getAllBooks, createProduct, deleteProduct, updateProduct, FindByIdProduct } from '../../services/userService';
-// import ModelProduct from './ModelProduct';
-// import ModelEditProduct from './ModelEditProduct';
+import './CateManage.scss';
+import { getAllCate, createCate, deleteCate, updateCate, FindByIdCate } from '../../services/cateService';
+import ModalCreateCate from './ModalCreateCate';
+import ModalEditCate from './ModalEditCate';
 import { db } from '../../firebaseConnect';
 import { doc, setDoc } from "firebase/firestore";
 import { toast } from "react-toastify";
@@ -14,35 +14,39 @@ class CateManage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            arrProdcut: [],
+            arrCate: [],
+
+            arrCateFromParent: [],
+
             isOpenModalProduct: false,
             isOpenModalEditProduct: false,
-            arrProdcutFromParent: [],
+
+
             errCode: '',
             errMessage: '',
         }
     }
 
     async componentDidMount() {
-        // let resopnse = await getAllBooks();
-        // if (resopnse && resopnse.errCode === 0) {
-        //     this.setState({
-        //         arrProdcut: resopnse.product
-        //     })
-
-        // }
-
-    }
-    handleGetAllProduct = async () => {
-        let resopnse = await getAllBooks();
+        let resopnse = await getAllCate();
         if (resopnse && resopnse.errCode === 0) {
             this.setState({
-                arrProdcut: resopnse.product
+                arrCate: resopnse.user
+            })
+
+        }
+
+    }
+    handleGetAllCate = async () => {
+        let resopnse = await getAllCate();
+        if (resopnse && resopnse.errCode === 0) {
+            this.setState({
+                arrCate: resopnse.user
             })
 
         }
     }
-    handleCreateNewProduct = () => {
+    handleCreateNewCate = () => {
         this.setState({
             isOpenModalProduct: true
         })
@@ -64,18 +68,13 @@ class CateManage extends Component {
         })
     }
 
-    createProductModal = async (data) => {
-        // data.preventDefault()
-        // await setDoc(doc(db, "cities", "LA"), {
-        //     name: "Los Angeles",
-        //     state: "CA",
-        //     country: "USA"
-        // });
+    createCateModal = async (data) => {
+
         try {
-            let res = await createProduct(data);
+            let res = await createCate(data);
             if (res) {
-                toast.success("Create Product Success");
-                this.handleGetAllProduct();
+                toast.success("Create Category Success");
+                this.handleGetAllCate();
                 this.setState({
                     isOpenModalProduct: false,
                     errMessage: res.errMessage,
@@ -89,12 +88,12 @@ class CateManage extends Component {
             console.log(error)
         }
     }
-    editProductModal = async (data) => {
+    editCateModal = async (data) => {
         try {
-            let res = await updateProduct(data);
+            let res = await updateCate(data);
             if (res) {
-                toast.success("Update Product Success");
-                this.handleGetAllProduct();
+                toast.success("Update Category Success");
+                this.handleGetAllCate();
                 this.setState({
                     isOpenModalEditProduct: false,
                     errMessage: res.errMessage,
@@ -105,54 +104,58 @@ class CateManage extends Component {
             console.log(error)
         }
     }
-    handleDeleteProduct = async (product) => {
+    handleDeleteProduct = async (cate) => {
         try {
-            let res = await deleteProduct(product.id)
+            let res = await deleteCate(cate.id)
             if (res) {
-                toast.success("Delete Product Success");
-                this.handleGetAllProduct();
+                toast.success("Delete Cate Success");
+                this.handleGetAllCate();
             } else { toast.error("Delete Product Failed"); }
         } catch (error) {
-            toast.error("Delete Product Failed");
             console.log(error)
         }
-        console.log('check delete product', product);
+
     }
 
 
-    // handleTestHidden = () => {
-    //     alert("check check");
-    // }
+    handleTestHidden = () => {
+        alert("check check");
+    }
 
 
-    handleEditProduct = (product) => {
+    handleEditCate = (cate) => {
 
         this.setState({
             isOpenModalEditProduct: true,
-            arrProdcutFromParent: product
+            arrCateFromParent: cate
         })
+        console.log('check:....', cate)
     }
     render() {
-        // let arrProdcut = this.state.arrProdcut;
+        let arrCate = this.state.arrCate;
         // console.log('check product', arrProdcut)
         return (
             <>
-                {/* <ModelProduct
+                <ModalCreateCate
                     isOpen={this.state.isOpenModalProduct}
                     toggleProduct={this.toggleProductModal}
-                    createProductModal={this.createProductModal}
+
+                    createCateModal={this.createCateModal}
+
                     errMessage={this.state.errMessage}
                     errCode={this.state.errCode}
 
-                    handleEditProduct={this.handleEditProduct}
+                    handleEditCate={this.handleEditCate}
 
                 />
 
-                {this.state.isOpenModalEditProduct && <ModelEditProduct
+                {this.state.isOpenModalEditProduct && <ModalEditCate
                     isOpen={this.state.isOpenModalEditProduct}
                     toggleProductEdit={this.toggleProductModalEdit}
-                    editProduct={this.editProductModal}
-                    arrProdcutEdit={this.state.arrProdcutFromParent}
+
+                    editCate={this.editCateModal}
+                    arrCateEdit={this.state.arrCateFromParent}
+
                     errMessage={this.state.errMessage}
                     errCode={this.state.errCode}
                 />}
@@ -160,12 +163,12 @@ class CateManage extends Component {
 
                 <div className='header-listproduct'>
                     <button className='button-add' type="button"
-                        onClick={() => this.handleCreateNewProduct()}
+                        onClick={() => this.handleCreateNewCate()}
                     >
-                        <i className='fa fa-plus '> Add New Product</i>
+                        <i className='fa fa-plus '> Add New Category</i>
                     </button>
-                   
-                    <h2>List Product</h2>
+
+                    <h2>List Category</h2>
                 </div>
 
                 <div className="table-wrapper">
@@ -174,26 +177,23 @@ class CateManage extends Component {
                             <tr>
                                 <th>Id</th>
                                 <th>Name</th>
-                                <th>Price</th>
-                                <th>Quantity</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             {
-                                arrProdcut && arrProdcut.map((item, index) => {
+                                arrCate && arrCate.map((item, index) => {
 
                                     return (
                                         <>
                                             <tr>
 
                                                 <td >{item.id}</td>
-                                                <td >{item.name}</td>
-                                                <td ><span className="new-price new-price-2">{new Intl.NumberFormat('vi-VN', { style: 'decimal', decimal: 'VND' }).format(item.price) + ' VNĐ'}</span></td>
-                                                <td >{item.quantity}</td>
+                                                <td >{item.category}</td>
+
                                                 <td>
                                                     <button
-                                                        onClick={() => { this.handleEditProduct(item) }}
+                                                        onClick={() => { this.handleEditCate(item) }}
                                                         className='button-style-eidt' type='button' ><i className="fas fa-pencil-alt"></i></button>
                                                     <button
                                                         onClick={() => { this.handleDeleteProduct(item) }}
@@ -206,8 +206,8 @@ class CateManage extends Component {
                             }
                         </tbody>
                     </table>
-                </div> */}
-                <div>zxc,nzx,cmnz,xcmnz,xcnz,cn,mzxcn,mzcn,mznxc,mznxc,nz,xcn,mznxc,</div>
+                </div>
+                {/* <div>zxc,nzx,cmnz,xcmnz,xcnz,cn,mzxcn,mzcn,mznxc,mznxc,nz,xcn,mznxc,</div> */}
 
 
 

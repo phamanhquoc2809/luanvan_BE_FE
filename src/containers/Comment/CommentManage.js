@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 // import './CommentManage.scss';
-import { getAllBooks, createProduct, deleteProduct, updateProduct, FindByIdProduct } from '../../services/userService';
+import { getAllBooks, createProduct, deleteProduct, updateProduct, FindByIdProduct } from '../../services/productService';
 // import ModelProduct from './ModelProduct';
 // import ModelEditProduct from './ModelEditProduct';
 import { db } from '../../firebaseConnect';

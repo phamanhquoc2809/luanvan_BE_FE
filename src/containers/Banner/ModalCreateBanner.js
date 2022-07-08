@@ -2,8 +2,10 @@ import React, { useEffect, Component } from 'react';
 // import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, FormGroup, Input } from 'reactstrap';
+import { getAllBooks } from '../../services/productService';
 
-import { getAllCate, createCate, deleteCate, updateCate, FindByIdCate } from '../../services/cateService';
+
+import { getAllBanner, createBanner, deleteBanner, updateBanner, FindByIdBanner } from '../../services/bannerService';
 import { db, storage } from '../../firebaseConnect';
 import { doc, setDoc } from "firebase/firestore";
 import { ref, uploadBytesResumable, getDownloadURL, listAll, list, uploadBytes } from "firebase/storage";
@@ -11,30 +13,37 @@ import { v4 } from "uuid";
 
 import Lightbox from 'react-image-lightbox';
 import 'react-image-lightbox/style.css';
-import './ModalCreateCate.scss'
-class ModalCreateCate extends Component {
+import './ModalCreateBanner.scss'
+class ModalCreateBanner extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            arrCategory: [],
+            arrBanner: [],
 
+            arrProduct: [],
 
             isOpen: false,
 
 
-            category: null,
+            picture: null,
+            id_product: null
         }
     }
 
     async componentDidMount() {
 
-        let resopnse = await getAllCate();
+        let resopnse = await getAllBanner();
+        let resProduct = await getAllBooks();
 
         if (resopnse && resopnse.errCode === 0) {
             this.setState({
-                arrCategory: resopnse.user
+                arrBanner: resopnse.banner
             })
-
+        }
+        if (resProduct && resProduct.errCode === 0) {
+            this.setState({
+                arrProduct: resProduct.product
+            })
         }
 
 
@@ -48,7 +57,7 @@ class ModalCreateCate extends Component {
 
     checkValueInput = () => {
         let isValid = true;
-        let arrCheck = ['category']
+        let arrCheck = ['id_product']
 
         for (let i = 0; i < arrCheck.length; i++) {
 
@@ -67,7 +76,7 @@ class ModalCreateCate extends Component {
     handleAddnew = async () => {
         let isValid = this.checkValueInput();
         if (isValid === true) {
-            this.props.createCateModal(this.state)
+            this.props.createBannerModal(this.state)
         }
     }
     onChageInput = (event, id) => {
@@ -77,24 +86,12 @@ class ModalCreateCate extends Component {
             ...copystate
         })
     }
-    // upLoadImage = () => {
-    //     // imageUpload: null,
-    //     // setImageUpload: null,
-
-    //     // fileUrl: [],
-    //     // setFileUrl: [],
-    //     if (this.state.imageUpload === null) return;
-    //     const imageREf = ref(storage, `images/${this.state.imageUpload.name + v4()}`);
-    //     uploadBytes(imageREf, this.state.imageUpload).then(() => {
-    //         console.log('check upload anh', imageREf)
-    //     })
-
-    // }
 
     render() {
+        let arrProduct = this.state.arrProduct;
         let {
-            category } = this.state;
-        // console.log('check anh: ', imageREf)
+            picture, id_product } = this.state;
+
         return (
             <Modal isOpen={this.props.isOpen}
                 toggle={() => { this.toggle() }}
@@ -103,20 +100,51 @@ class ModalCreateCate extends Component {
             >
                 <ModalHeader toggle={() => { this.toggle() }}
                 >
-                    Create new Category
+                    Create new Banner
                 </ModalHeader>
                 <ModalBody>
-                    {/* <div className='body'></div> */}
+
                     <div className="wrapper">
                         <div className="container">
                             <form action="">
-                                <div>
-                                    <label for="f-name">Name</label>
-                                    <input type="text" name="f-name"
-                                        value={category}
-                                        onChange={(event) => { this.onChageInput(event, 'category') }}
+                                <div className='preview-image-container'>
+                                    <label for="card-num">Image</label>
+                                    <input type="file"
+                                        // value={picture}
+                                        onChange={(event) => this.handleOnchangeImage(event)}
+
                                     />
+                                    <div className='preview-image'
+                                        style={{ backgroundImage: `url(${this.state.previewImageURL})` }}
+                                        onClick={() => this.openPreviewImage()}
+
+                                    >
+
+                                    </div>
+
                                 </div>
+                                <div>
+                                    <label for="card-num">Id Product</label>
+                                    <select className='form-control'
+                                        value={id_product}
+                                        onChange={(event) => { this.onChageInput(event, 'id_product') }}
+                                    >
+
+                                        {
+                                            arrProduct && arrProduct.map((item, index) => {
+
+                                                return (
+
+                                                    <>
+                                                        <option value={item.id}>{item.id}</option>
+                                                    </>
+                                                )
+                                            })
+
+                                        }
+                                    </select>
+                                </div>
+
                                 <div className="btns">
                                     {/* <button id='new' hidden
                                         onClick={() => { this.testHandle(); alert("Hello!"); }}>Purchase</button>
@@ -158,4 +186,4 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ModalCreateCate);
+export default connect(mapStateToProps, mapDispatchToProps)(ModalCreateBanner);

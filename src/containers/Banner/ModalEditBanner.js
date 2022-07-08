@@ -2,23 +2,25 @@ import React, { Component } from 'react';
 // import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, FormGroup, Input } from 'reactstrap';
+import { getAllBooks } from '../../services/productService';
 
 import { getAllCate, createCate, deleteCate, updateCate, FindByIdCate } from '../../services/cateService';
 import Lightbox from 'react-image-lightbox';
 import 'react-image-lightbox/style.css';
-import './ModalEditCate.scss'
-class ModalEditCate extends Component {
+import './ModalEditBanner.scss'
+class ModalEditBanner extends Component {
     constructor(props) {
         super(props);
         this.state = {
             arrCategory: [],
 
-            arrProductFromParent: [],
+            arrProduct: [],
 
             isOpen: false,
 
-            id: this.props.arrCateEdit.id,
-            category: this.props.arrCateEdit.category,
+            id: this.props.arrBannerEdit.id,
+            picture: this.props.arrBannerEdit.picture,
+            id_product: this.props.arrBannerEdit.id_product,
 
 
 
@@ -26,8 +28,8 @@ class ModalEditCate extends Component {
     }
 
     async componentDidMount() {
-        let resEdit = this.props.arrCateEdit;
-
+        let resEdit = this.props.arrBannerEdit;
+        let resProduct = await getAllBooks();
         let resopnse = await getAllCate();
 
         if (resopnse && resopnse.errCode === 0) {
@@ -36,9 +38,15 @@ class ModalEditCate extends Component {
             })
 
         }
+        if (resProduct && resProduct.errCode === 0) {
+            this.setState({
+                arrProduct: resProduct.product
+            })
+        }
 
         this.setState({
-            category: resEdit.category,
+            picture: resEdit.picture,
+            id_product: resEdit.id_product
 
         })
 
@@ -51,7 +59,7 @@ class ModalEditCate extends Component {
 
     checkValueInput = () => {
         let isValid = true;
-        let arrCheck = ['category']
+        let arrCheck = ['id_product']
 
         for (let i = 0; i < arrCheck.length; i++) {
 
@@ -72,7 +80,7 @@ class ModalEditCate extends Component {
         let isValid = this.checkValueInput();
         if (isValid === false) return;
 
-        this.props.editCate(this.state)
+        this.props.editBanner(this.state)
 
 
 
@@ -87,7 +95,8 @@ class ModalEditCate extends Component {
 
     render() {
         let {
-            category } = this.state;
+            picture, id_product } = this.state;
+        let arrProduct = this.state.arrProduct;
 
         return (
             <Modal isOpen={this.props.isOpen}
@@ -97,24 +106,52 @@ class ModalEditCate extends Component {
             >
                 <ModalHeader toggle={() => { this.toggle() }}
                 >
-                    Edit Category
+                    Edit Banner
                 </ModalHeader>
                 <ModalBody>
-                    {/* <div className='body'></div> */}
+
                     <div className="wrapper">
                         <div className="container">
                             <form action="">
-                                <div>
-                                    <label for="f-name">Name</label>
-                                    <input type="text" name="f-name"
-                                        value={category}
-                                        onChange={(event) => { this.onChageInput(event, 'category') }}
+                                <div className='preview-image-container'>
+                                    <label for="card-num">Image</label>
+                                    <input type="file"
+                                        // value={picture}
+                                        onChange={(event) => this.handleOnchangeImage(event)}
+
                                     />
+                                    <div className='preview-image'
+                                        style={{ backgroundImage: `url(${this.state.previewImageURL})` }}
+                                        onClick={() => this.openPreviewImage()}
+
+                                    >
+
+                                    </div>
 
                                 </div>
+                                <div>
+                                    <label for="card-num">Id Product</label>
+                                    <select className='form-control'
+                                        value={id_product}
+                                        onChange={(event) => { this.onChageInput(event, 'id_product') }}
+                                    >
+
+                                        {
+                                            arrProduct && arrProduct.map((item, index) => {
+
+                                                return (
+
+                                                    <>
+                                                        <option value={item.id}>{item.id}</option>
+                                                    </>
+                                                )
+                                            })
+
+                                        }
+                                    </select>
+                                </div>
                                 <div className="btns">
-                                    {/* <button>Purchase</button>
-                                    <button>Back to cart</button> */}
+
                                 </div>
                             </form>
                         </div>
@@ -151,4 +188,4 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ModalEditCate);
+export default connect(mapStateToProps, mapDispatchToProps)(ModalEditBanner);
